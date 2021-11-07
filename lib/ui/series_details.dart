@@ -1,8 +1,8 @@
+import 'package:cinephilia/bloc/convert_id_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_details_bloc.dart';
 import 'package:cinephilia/model/tmdb_details.dart';
 import 'package:cinephilia/ui/seasonEpisodes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,12 +18,24 @@ class SeriesDetails extends StatefulWidget {
 
 class _SeriesDetailsState extends State<SeriesDetails> {
   ScrollController scrollController = ScrollController();
+  String id = '';
 
   @override
   void initState() {
     tmdbDetailsBloc.id = widget.id;
     tmdbDetailsBloc.fetch();
-    // TODO: implement initState
+    convertIdBloc.id = widget.id;
+    convertIdBloc.fetch();
+    convertIdBloc.convertId.listen(
+      (event) {
+        id = event.imdbId;
+      },
+      onError: (error) {
+        print(error);
+      },
+      cancelOnError: true,
+    );
+
     super.initState();
   }
 
@@ -138,6 +150,12 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                             child: Text('${data.genres[index].name}, '));
                       }),
                 ),
+                if(data.spokenLanguages.toString()!='[]')Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                  child: Text(
+                      'Spoken languages : ${data.spokenLanguages.first.englishName}\nProduction company : ${data.productionCompanies.first.name}\nstatus : ${data.status}\nTagline : ${data.tagline}\nfirst Air : ${data.firstAirDate}'),
+                ),
                 Container(
                   margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                   child: Text(
@@ -163,7 +181,8 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => SeasonEpisode(
                                           data.id.toString(),
-                                          data.seasons[index].seasonNumber)));
+                                          data.seasons[index].seasonNumber,
+                                          id)));
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(left: 10, right: 10),
@@ -238,10 +257,32 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                           return SizedBox.shrink();
                         }
                       }),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'For further information open',
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _launchURL('https://www.imdb.com/title/$id/');
+                      },
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.asset('images/imdb.png'),
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
           )),
     );
   }
+
+  void _launchURL(String url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }
