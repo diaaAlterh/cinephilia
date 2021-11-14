@@ -32,7 +32,7 @@ class ApiProvider {
     try {
       Response response = await _dataLoader(
           url:
-              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=year');
+              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=year&limit=50');
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
@@ -45,7 +45,7 @@ class ApiProvider {
     try {
       Response response = await _dataLoader(
           url:
-              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=like_count');
+              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=like_count&limit=50');
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
@@ -58,7 +58,7 @@ class ApiProvider {
     try {
       Response response = await _dataLoader(
           url:
-              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=download_count');
+              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=download_count&limit=50');
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
@@ -71,7 +71,7 @@ class ApiProvider {
     try {
       Response response = await _dataLoader(
           url:
-              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=date_added');
+              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=date_added&limit=50');
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
@@ -84,7 +84,7 @@ class ApiProvider {
     try {
       Response response = await _dataLoader(
           url:
-              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=rating');
+              'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=rating&limit=50');
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');

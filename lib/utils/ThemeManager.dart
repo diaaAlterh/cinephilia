@@ -13,6 +13,7 @@ class ThemeNotifier with ChangeNotifier {
 
   final lightTheme = ThemeData(
       primarySwatch: Colors.orange,
+      primaryColor: Colors.orange,
       cardColor: Colors.grey,
   );
 

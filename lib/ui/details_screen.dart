@@ -3,6 +3,7 @@
 import 'package:cinephilia/bloc/details_bloc.dart';
 import 'package:cinephilia/model/details_model.dart';
 import 'package:cinephilia/utils/download.dart';
+import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -237,7 +238,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   children: [
                                     ListTile(
                                       onTap: () {
-                                        _launchURL('https://database.gdriveplayer.us/player.php?imdb=${data.data.movie.imdbCode}');
+                                        helper.launchURL('https://database.gdriveplayer.us/player.php?imdb=${data.data.movie.imdbCode}');
                                       },
                                       title: Text('Server 1'),
                                       subtitle: Text('video database'),
@@ -246,7 +247,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     Divider(),
                                     ListTile(
                                       onTap: () {
-                                        _launchURL('https://googlvideo.com/imdb.php?imdb=${data.data.movie.imdbCode}&server=vcs');
+                                        helper.launchURL('https://googlvideo.com/imdb.php?imdb=${data.data.movie.imdbCode}&server=vcs');
                                       },
                                       title: Text('Server 2'),
                                       subtitle: Text('google video'),
@@ -254,7 +255,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     ),
                                     Divider(), ListTile(
                                       onTap: () {
-                                        _launchURL('https://googlvideo.com/imdb.php?imdb=${data.data.movie.imdbCode}&server=serverf4');
+                                        helper.launchURL('https://googlvideo.com/imdb.php?imdb=${data.data.movie.imdbCode}&server=serverf4');
                                       },
                                       title: Text('Server 3'),
                                       subtitle: Text('123 movie'),
@@ -263,7 +264,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     Divider(),
                                     ListTile(
                                       onTap: () {
-                                        _launchURL('https://v2.vidsrc.me/embed/${data.data.movie.imdbCode}');
+                                        helper.launchURL('https://v2.vidsrc.me/embed/${data.data.movie.imdbCode}');
                                       },
 
                                       title: Text('Server 4'),
@@ -308,7 +309,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _launchURL('https://www.imdb.com/title/${data.data.movie.imdbCode}/');
+                        helper.launchURL('https://www.imdb.com/title/${data.data.movie.imdbCode}/');
 
                       },
                       child: Container(
@@ -328,7 +329,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _launchURL('https://m.youtube.com/watch?v=${data.data.movie.ytTrailerCode}');
+                        helper.launchURL('https://m.youtube.com/watch?v=${data.data.movie.ytTrailerCode}');
 
                       },
                       child: Container(
@@ -344,7 +345,4 @@ class _DetailsScreenState extends State<DetailsScreen> {
           )),
     );
   }
-
-  void _launchURL(String url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }

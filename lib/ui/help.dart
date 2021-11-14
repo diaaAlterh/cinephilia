@@ -1,5 +1,5 @@
+import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Help extends StatefulWidget {
   @override
@@ -52,7 +52,7 @@ class _HelpState extends State<Help> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      _launchURL(
+                      helper.launchURL(
                           'https://play.google.com/store/apps/details?id=com.utorrent.client&hl=en&gl=US');
                     },
                     child: Image.asset(
@@ -62,7 +62,7 @@ class _HelpState extends State<Help> {
                     )),
                 GestureDetector(
                   onTap: () {
-                    _launchURL(
+                    helper.launchURL(
                         'https://play.google.com/store/apps/details?id=com.bittorrent.client&hl=en&gl=US');
                   },
                   child: Image.asset(
@@ -73,7 +73,7 @@ class _HelpState extends State<Help> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _launchURL(
+                    helper.launchURL(
                         'https://play.google.com/store/apps/details?id=com.dv.adm&hl=en_US&gl=US');
                   },
                   child: Image.asset(
@@ -90,6 +90,4 @@ class _HelpState extends State<Help> {
     );
   }
 
-  void _launchURL(String url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }

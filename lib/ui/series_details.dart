@@ -2,10 +2,10 @@ import 'package:cinephilia/bloc/convert_id_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_details_bloc.dart';
 import 'package:cinephilia/model/tmdb_details.dart';
 import 'package:cinephilia/ui/seasonEpisodes.dart';
+import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SeriesDetails extends StatefulWidget {
   final String id;
@@ -177,12 +177,10 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  ///details
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => SeasonEpisode(
-                                          data.id.toString(),
-                                          data.seasons[index].seasonNumber,
-                                          id)));
+                                 helper.goTo(context, SeasonEpisode(
+                                     data.id.toString(),
+                                     data.seasons[index].seasonNumber,
+                                     id));
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(left: 10, right: 10),
@@ -267,7 +265,7 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        _launchURL('https://www.imdb.com/title/$id/');
+                        helper.launchURL('https://www.imdb.com/title/$id/');
                       },
                       child: Container(
                         height: 100,
@@ -282,7 +280,4 @@ class _SeriesDetailsState extends State<SeriesDetails> {
           )),
     );
   }
-
-  void _launchURL(String url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }

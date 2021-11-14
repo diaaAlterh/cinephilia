@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'movies_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {

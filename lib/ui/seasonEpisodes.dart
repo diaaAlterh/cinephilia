@@ -1,7 +1,7 @@
 import 'dart:ui';
-
 import 'package:cinephilia/bloc/season_bloc.dart';
 import 'package:cinephilia/model/season_model.dart';
+import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -78,7 +78,7 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                               children: [
                                                 ListTile(
                                                   onTap: () {
-                                                    _launchURL(
+                                                    helper.launchURL(
                                                         'https://googlvideo.com/tmdb_api.php?se=${widget.s}&ep=${snapshot.data!.episodes[index].episodeNumber}&tmdb=${widget.id}&server_name=vcu');
                                                   },
                                                   title: Text('Server 1'),
@@ -87,7 +87,7 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                                 Divider(),
                                                 ListTile(
                                                   onTap: () {
-                                                    _launchURL(
+                                                    helper.launchURL(
                                                         'https://database.gdriveplayer.us/player.php?type=series&tmdb=${widget.id}&season=${widget.s}&episode=${snapshot.data!.episodes[index].episodeNumber}');
                                                   },
                                                   title: Text('Server 2'),
@@ -97,7 +97,7 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                                 Divider(),
                                                 ListTile(
                                                   onTap: () {
-                                                    _launchURL(
+                                                    helper.launchURL(
                                                         'https://v2.vidsrc.me/embed/${widget.imdbId}/${widget.s}-${snapshot.data!.episodes[index].episodeNumber}/');
                                                   },
                                                   title: Text('Server 3'),
@@ -169,7 +169,4 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
           }),
     );
   }
-
-  void _launchURL(String url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }
