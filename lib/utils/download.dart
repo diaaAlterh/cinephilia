@@ -24,7 +24,6 @@ class Download{
       print('hello other people${obj['filePath']}');
       OpenFile.open(obj['filePath']);
 
-
     } else {
     }
   }

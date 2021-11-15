@@ -16,14 +16,14 @@ class TmdbPopularBloc {
   Stream<Tmdb> get tmdbPopular => _tmdbPopularBlocFetcher.stream;
 
   fetch() async {
-    // try {
+    try {
       Tmdb? tmdbPopular = await fetchTmdbPopular();
       _tmdbPopularBlocFetcher.sink.add(tmdbPopular!);
-    // } catch (e) {
-    //   // ignore: avoid_print
-    //   _tmdbRatedBlocFetcher.sink.addError(e);
-    //   print('hhhhhhhhhhhhhhhhhh $e');
-    // }
+    } catch (e) {
+      // ignore: avoid_print
+      _tmdbPopularBlocFetcher.sink.addError(e);
+      print('hhhhhhhhhhhhhhhhhh $e');
+    }
   }
 
   dispose() {

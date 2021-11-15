@@ -21,16 +21,24 @@ class _SeriesScreenState extends State<SeriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: [
-          helper.title('Trending', 7, context),
-          helper.buildMovies(tmdbOnTheAirBloc.tmdbOnTheAir,context,false),
-          helper.title('Top Rated', 8, context),
-          helper.buildMovies(tmdbRatedBloc.tmdbRated,context,false),
-          helper.title('Most Popular', 9, context),
-          helper.buildMovies(tmdbPopularBloc.tmdbPopular,context,false),
-        ],
+      body: RefreshIndicator(
+        onRefresh: (){
+          tmdbRatedBloc.fetch();
+          tmdbPopularBloc.fetch();
+          tmdbOnTheAirBloc.fetch();
+          return Future.delayed(Duration(seconds: 2));
+        },
+        child: ListView(
+          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          children: [
+            helper.title('Trending', 7, context),
+            helper.buildMovies(tmdbOnTheAirBloc.tmdbOnTheAir,context,false),
+            helper.title('Top Rated', 8, context),
+            helper.buildMovies(tmdbRatedBloc.tmdbRated,context,false),
+            helper.title('Most Popular', 9, context),
+            helper.buildMovies(tmdbPopularBloc.tmdbPopular,context,false),
+          ],
+        ),
       ),
     );
   }

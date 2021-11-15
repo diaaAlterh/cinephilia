@@ -16,14 +16,14 @@ class TmdbOnTheAirBloc {
   Stream<Tmdb> get tmdbOnTheAir => _tmdbOnTheAirBlocFetcher.stream;
 
   fetch() async {
-    // try {
+    try {
       Tmdb? tmdbOnTheAir = await fetchTmdbOnTheAir();
       _tmdbOnTheAirBlocFetcher.sink.add(tmdbOnTheAir!);
-    // } catch (e) {
-    //   // ignore: avoid_print
-    //   _tmdbRatedBlocFetcher.sink.addError(e);
-    //   print('hhhhhhhhhhhhhhhhhh $e');
-    // }
+    } catch (e) {
+      // ignore: avoid_print
+      _tmdbOnTheAirBlocFetcher.sink.addError(e);
+      print('hhhhhhhhhhhhhhhhhh $e');
+    }
   }
 
   dispose() {

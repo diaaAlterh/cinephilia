@@ -16,14 +16,14 @@ class TmdbRatedBloc {
   Stream<Tmdb> get tmdbRated => _tmdbRatedBlocFetcher.stream;
 
   fetch() async {
-    // try {
+    try {
       Tmdb? tmdbRated = await fetchTmdbRated();
       _tmdbRatedBlocFetcher.sink.add(tmdbRated!);
-    // } catch (e) {
-    //   // ignore: avoid_print
-    //   _tmdbRatedBlocFetcher.sink.addError(e);
-    //   print('hhhhhhhhhhhhhhhhhh $e');
-    // }
+    } catch (e) {
+      // ignore: avoid_print
+      _tmdbRatedBlocFetcher.sink.addError(e);
+      print('hhhhhhhhhhhhhhhhhh $e');
+    }
   }
 
   dispose() {

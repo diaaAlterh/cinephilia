@@ -70,7 +70,6 @@ class _SeeMoreState extends State<SeeMore> {
                   keyboardType: TextInputType.name,
                   textInputAction: TextInputAction.search,
                   controller: _searchQueryController,
-                  cursorColor: Theme.of(context).textSelectionHandleColor,
                   focusNode: focusNode,
                   autofocus: true,
                   decoration: InputDecoration(
@@ -326,10 +325,13 @@ class _SeeMoreState extends State<SeeMore> {
   Widget buildGrid(Stream stream, bool isyts) {
     return Expanded(
         child: Container(
-      margin: EdgeInsets.only(left: 20, top: 20),
+      // margin: EdgeInsets.only(left: 20, top: 20),
       child: StreamBuilder(
           stream: stream,
           builder: (context, AsyncSnapshot snapshot) {
+            if(snapshot.data?.data.movies.length==0){
+              return Center(child: Text('make sure you type a correct movie name'));
+            }
             if (snapshot.hasData) {
               return Scrollbar(
                 child: GridView.builder(
@@ -345,121 +347,124 @@ class _SeeMoreState extends State<SeeMore> {
                         ? snapshot.data!.data.movies.length
                         : snapshot.data!.results.length,
                     itemBuilder: (BuildContext ctx, index) {
-                      return Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (isyts) {
-                                helper.goTo(
-                                    context,
-                                    DetailsScreen(snapshot
-                                        .data!.data.movies[index].id
-                                        .toString()));
-                              } else {
-                                helper.goTo(
-                                    context,
-                                    SeriesDetails(snapshot
-                                        .data!.results[index].id
-                                        .toString()));
-                              }
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(left: 0, right: 10),
-                              width: 170,
-                              child: ClipRRect(
-                                child: Image.network(
-                                    isyts
-                                        ? snapshot.data?.data?.movies[index]
-                                                ?.largeCoverImage ??
-                                            ''
-                                        : 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${snapshot.data!.results[index].posterPath}',
-                                    fit: BoxFit.fill, errorBuilder:
-                                        (context, child, loadingProgress) {
-                                  print('error in pic');
+                      return Container(
+                        margin: EdgeInsets.only(left: 15,top: 20,right: 5),
+                        child: Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (isyts) {
+                                  helper.goTo(
+                                      context,
+                                      DetailsScreen(snapshot
+                                          .data!.data.movies[index].id
+                                          .toString()));
+                                } else {
+                                  helper.goTo(
+                                      context,
+                                      SeriesDetails(snapshot
+                                          .data!.results[index].id
+                                          .toString()));
+                                }
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(left: 0, right: 10),
+                                width: 170,
+                                child: ClipRRect(
+                                  child: Image.network(
+                                      isyts
+                                          ? snapshot.data?.data?.movies[index]
+                                                  ?.largeCoverImage ??
+                                              ''
+                                          : 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${snapshot.data!.results[index].posterPath}',
+                                      fit: BoxFit.fill, errorBuilder:
+                                          (context, child, loadingProgress) {
+                                    print('error in pic');
 
-                                  if (loadingProgress == null) return SizedBox();
-                                  print('error in pic');
+                                    if (loadingProgress == null) return SizedBox();
+                                    print('error in pic');
 
-                                  return Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.movie,
-                                          size: 80,
-                                        ),
-                                        Text('damaged content')
-                                      ],
-                                    ),
-                                  );
-                                }, loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.movie,
+                                            size: 80,
+                                          ),
+                                          Text('damaged content')
+                                        ],
+                                      ),
+                                    );
+                                  }, loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
 
-                                  return Shimmery(170);
-                                }),
-                                borderRadius: BorderRadius.circular(20),
+                                    return Shimmery(170);
+                                  }),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
                             ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                width: 120,
-                                margin: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  isyts
-                                      ? snapshot.data!.data.movies[index].year
-                                          .toString()
-                                      : snapshot
-                                          .data!.results[index].firstAirDate
-                                          .toString(),
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white.withOpacity(0.8)),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 10, bottom: 10),
-                                // height: 18,
-                                width: 120,
-                                child: Text(
-                                  isyts
-                                      ? snapshot.data!.data.movies[index].title
-                                      : snapshot.data!.results[index].name,
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: 170,
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [Colors.orange, Colors.red]),
-                              ),
-                              margin: EdgeInsets.only(top: 10, right: 18),
-                              child: Center(
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  width: 120,
+                                  margin: EdgeInsets.only(left: 10),
                                   child: Text(
-                                isyts
-                                    ? snapshot.data!.data.movies[index].rating
-                                        .toString()
-                                    : snapshot.data!.results[index].voteAverage
-                                        .toString(),
-                                style: TextStyle(color: Colors.white),
-                              )),
+                                    isyts
+                                        ? snapshot.data!.data.movies[index].year
+                                            .toString()
+                                        : snapshot
+                                            .data!.results[index].firstAirDate
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white.withOpacity(0.8)),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10, bottom: 10),
+                                  // height: 18,
+                                  width: 120,
+                                  child: Text(
+                                    isyts
+                                        ? snapshot.data!.data.movies[index].title
+                                        : snapshot.data!.results[index].name,
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
-                          )
-                        ],
+                            Container(
+                              width: 170,
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [Colors.blueAccent, Colors.lightBlueAccent]),
+                                ),
+                                margin: EdgeInsets.only(top: 10, right: 18),
+                                child: Center(
+                                    child: Text(
+                                  isyts
+                                      ? snapshot.data!.data.movies[index].rating
+                                          .toString()
+                                      : snapshot.data!.results[index].voteAverage
+                                          .toString(),
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                              ),
+                            )
+                          ],
+                        ),
                       );
                     }),
               );

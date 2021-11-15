@@ -1,6 +1,5 @@
 import 'package:cinephilia/ui/help.dart';
 import 'package:cinephilia/ui/movies_screen.dart';
-import 'package:cinephilia/ui/onboarding_screen.dart';
 import 'package:cinephilia/ui/see_more.dart';
 import 'package:cinephilia/ui/series_screen.dart';
 import 'package:cinephilia/utils/ThemeManager.dart';
@@ -8,16 +7,9 @@ import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-int? initScreen;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  initScreen = await prefs.getInt("initScreen");
-  await prefs.setInt("initScreen", 1);
-  print('initScreen ${initScreen}');
   runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
     child: MyApp(),
@@ -31,6 +23,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int b = 1;
+  DrawerSelection _drawerSelection = DrawerSelection.movies;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +33,7 @@ class _MyAppState extends State<MyApp> {
               theme: theme.getTheme(),
               debugShowCheckedModeBanner: false,
               themeMode: ThemeMode.system,
-              initialRoute:
-                  initScreen == 0 || initScreen == null ? "first" : "/",
+              initialRoute: "/",
               routes: {
                 '/': (context) => WillPopScope(
                       onWillPop: helper.onWillPop,
@@ -66,46 +58,60 @@ class _MyAppState extends State<MyApp> {
                         drawer: Drawer(
                           child: ListView(
                             children: [
+                              Container(
+                                child: Image.asset(
+                                  'images/icon.png',
+                                  height: 70,
+                                  width: 70,
+                                ),
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.only(left: 20, top: 20),
+                              ),
                               ListTile(
+                                title: Text(
+                                  'Cinephilia',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                subtitle: Text(
+                                  'Movies & TV Shows Stream',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              ListTile(
+                                selected:
+                                    _drawerSelection == DrawerSelection.movies,
                                 title: Text('Movies'),
                                 leading: Icon(
                                   Icons.movie,
-                                  color: Colors.orange,
+                                  color: Colors.blue,
                                 ),
                                 onTap: () {
                                   b = 1;
+                                  _drawerSelection = DrawerSelection.movies;
                                   helper.goBack(context);
                                   setState(() {});
                                 },
                               ),
                               ListTile(
                                 title: Text('TV Shows'),
+                                selected:
+                                    _drawerSelection == DrawerSelection.tvShows,
                                 leading: Icon(
                                   Icons.tv,
-                                  color: Colors.orange,
+                                  color: Colors.blue,
                                 ),
                                 onTap: () {
                                   b = 2;
                                   setState(() {});
+                                  _drawerSelection = DrawerSelection.tvShows;
                                   helper.goBack(context);
-                                },
-                              ),
-                              ListTile(
-                                title: Text('Help'),
-                                leading: Icon(
-                                  Icons.help,
-                                  color: Colors.orange,
-                                ),
-                                onTap: () {
-                                  helper.goBack(context);
-                                  helper.goTo(context, Help());
                                 },
                               ),
                               ListTile(
                                 title: Text('Dark / Light mode'),
                                 leading: Icon(
                                   Icons.wb_sunny,
-                                  color: Colors.orange,
+                                  color: Colors.blue,
                                 ),
                                 onTap: () {
                                   if (theme.getTheme() == theme.darkTheme) {
@@ -120,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                                 title: Text('Share the app'),
                                 leading: Icon(
                                   Icons.share,
-                                  color: Colors.orange,
+                                  color: Colors.blue,
                                 ),
                                 onTap: () {
                                   Share.share(
@@ -129,14 +135,27 @@ class _MyAppState extends State<MyApp> {
                                   helper.goBack(context);
                                 },
                               ),
+                              ListTile(
+                                title: Text('Help'),
+                                leading: Icon(
+                                  Icons.help,
+                                  color: Colors.blue,
+                                ),
+                                onTap: () {
+                                  helper.goBack(context);
+
+                                  helper.goTo(context, Help());
+                                },
+                              ),
                             ],
                           ),
                         ),
                         body: b == 2 ? SeriesScreen() : MoviesScreen(),
                       ),
                     ),
-                "first": (context) => OnboardingScreen(),
               },
             ));
   }
 }
+
+enum DrawerSelection { movies, tvShows }

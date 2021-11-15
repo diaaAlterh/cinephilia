@@ -3,21 +3,17 @@ import 'package:flutter/material.dart';
 
 class ThemeNotifier with ChangeNotifier {
   final darkTheme = ThemeData(
-      brightness: Brightness.dark,
-      primarySwatch: Colors.orange,
-      textSelectionColor: Colors.white
-
+    brightness: Brightness.dark,
 
     /* dark theme settings */
   );
 
   final lightTheme = ThemeData(
-      primarySwatch: Colors.orange,
-      primaryColor: Colors.orange,
-      cardColor: Colors.grey,
+    cardColor: Colors.grey,
   );
 
-   ThemeData _themeData=ThemeData();
+  ThemeData _themeData = ThemeData();
+
   ThemeData getTheme() => _themeData;
 
   ThemeNotifier() {

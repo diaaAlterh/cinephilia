@@ -37,7 +37,9 @@ class Helper {
         onPressed: () {
           helper.goTo(context, SeeMore(bloc));
         },
-        child: Text('See more'),
+        child: Text(
+          'See more',
+        ),
       ),
     );
   }
@@ -53,7 +55,7 @@ class Helper {
             if (snapshot.hasData) {
               return ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                   itemCount: isYts
                       ? snapshot.data!.data.movies.length
                       : snapshot.data!.results.length,
@@ -108,7 +110,8 @@ class Helper {
                                 isYts
                                     ? snapshot.data!.data.movies[index].year
                                         .toString()
-                                    : snapshot.data!.results[index].firstAirDate
+                                    : snapshot
+                                        .data!.results[index].firstAirDate
                                         .toString(),
                                 style: TextStyle(
                                     fontSize: 12,
@@ -137,13 +140,19 @@ class Helper {
                             gradient: LinearGradient(
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
-                                colors: [Colors.orange, Colors.red]),
+                                colors: [
+                                  Colors.blueAccent,
+                                  Colors.lightBlueAccent
+                                ]),
                           ),
                           margin: EdgeInsets.only(bottom: 170, left: 110),
                           child: Center(
                               child: Text(
-                            isYts?snapshot.data!.data.movies[index].rating.toString():snapshot.data!.results[index].voteAverage
-                                .toString(),
+                            isYts
+                                ? snapshot.data!.data.movies[index].rating
+                                    .toString()
+                                : snapshot.data!.results[index].voteAverage
+                                    .toString(),
                             style: TextStyle(color: Colors.white),
                           )),
                         )
@@ -152,14 +161,14 @@ class Helper {
                   });
             }
             if (snapshot.hasError) {
-              return Text('no internet');
+              return Center(child: Text('no internet'));
             }
             return const Center(child: Text(''));
           }),
     );
   }
 
-   launchURL(String url) async =>
+  launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }
 
