@@ -55,7 +55,8 @@ class Helper {
             if (snapshot.hasData) {
               return ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  physics: BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
                   itemCount: isYts
                       ? snapshot.data!.data.movies.length
                       : snapshot.data!.results.length,
@@ -85,7 +86,28 @@ class Helper {
                                         ? snapshot.data!.data.movies[index]
                                             .largeCoverImage
                                         : 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${snapshot.data!.results[index].posterPath}',
-                                    loadingBuilder:
+                                    errorBuilder:
+                                        (context, child, loadingProgress) {
+                                  print('error in pic');
+
+                                  if (loadingProgress == null)
+                                    return SizedBox();
+                                  print('error in pic');
+
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.movie,
+                                          size: 80,
+                                        ),
+                                        Text('damaged content')
+                                      ],
+                                    ),
+                                  );
+                                }, loadingBuilder:
                                         (context, child, loadingProgress) {
                                   if (loadingProgress == null) return child;
 
@@ -110,8 +132,7 @@ class Helper {
                                 isYts
                                     ? snapshot.data!.data.movies[index].year
                                         .toString()
-                                    : snapshot
-                                        .data!.results[index].firstAirDate
+                                    : snapshot.data!.results[index].firstAirDate
                                         .toString(),
                                 style: TextStyle(
                                     fontSize: 12,

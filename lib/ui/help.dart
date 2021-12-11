@@ -26,16 +26,18 @@ class _HelpState extends State<Help> {
                     style: TextStyle(fontSize: 20),
                   ),
                   subtitle: Text(
-                    'is an online media file search engine and browser! mainly for movies And TV Shows downloading & Streaming it acts as a client-side web crawler to crawl and scrape hyperlinks that already available on the internet using public api such as yts for movies information and torrent download links and the tmdb api for TV shows information and for streaming we use links already on the internet such ad video database, google video and video src so  we do respect copyrighted content and we do not store any of the copyrighted content on our servers',
-                    style: TextStyle(fontSize: 15),
+                    'is an online app that provide links that already available on the internet to stream movies And TV Shows,\n\nit acts as a client-side with no server to store any kind of data copyrighted or not,\n\nusing public api such as yts for movies information and torrent download links and the tmdb api for TV shows information and for streaming we just provide links that already exist on the internet such ad video database, google video and video src,\n\nso we do respect copyrighted content and we do not store any of the copyrighted content',
+                    style: TextStyle(fontSize: 18),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                  child: Text(
-                    'Warning: downloading or watching torrent Movies & TV Shows is illegal and we do not support it and this app is directed to countries that does not have online payment to get an account for legal app like Netflix, Amazon Prime and Apple tv such as Syria ,we recommend that anyone has access to legal website not to use this app',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
+                ListTile(
+                  title: Text(
+                    'Warning :',
+                    style: TextStyle(fontSize: 20,color: Theme.of(context).errorColor),
+                  ),
+                  subtitle: Text(
+                    'downloading or watching free Movies & TV Shows is illegal and we do not support it and this app is directed to people who live in countries that does not have online payment to get an account for legal app like Netflix, Amazon Prime and Apple ,we recommend that anyone has access to legal website not to use this app',
+                    style: TextStyle(fontSize: 18),
                   ),
                 ),
                 Container(

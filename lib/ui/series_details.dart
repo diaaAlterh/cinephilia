@@ -5,6 +5,7 @@ import 'package:cinephilia/ui/seasonEpisodes.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SeriesDetails extends StatefulWidget {
@@ -50,7 +51,10 @@ class _SeriesDetailsState extends State<SeriesDetails> {
             } else if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             }
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: SpinKitWave(
+              color: Colors.blue,
+              size: 50.0,
+            ));
           }),
     );
   }
@@ -69,7 +73,7 @@ class _SeriesDetailsState extends State<SeriesDetails> {
           physics: BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
-              expandedHeight: MediaQuery.of(context).size.height / 2.5,
+              expandedHeight: MediaQuery.of(context).size.height / 2,
               collapsedHeight: 57,
               stretch: true,
               pinned: true,

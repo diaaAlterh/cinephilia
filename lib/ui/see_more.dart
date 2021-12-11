@@ -329,9 +329,9 @@ class _SeeMoreState extends State<SeeMore> {
       child: StreamBuilder(
           stream: stream,
           builder: (context, AsyncSnapshot snapshot) {
-            if(snapshot.data?.data.movies.length==0){
-              return Center(child: Text('make sure you type a correct movie name'));
-            }
+            // if(snapshot.data?.data?.movies.length==0){
+            //   return Center(child: Text('make sure you type a correct movie name'));
+            // }
             if (snapshot.hasData) {
               return Scrollbar(
                 child: GridView.builder(

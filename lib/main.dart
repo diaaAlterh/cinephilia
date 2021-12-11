@@ -1,3 +1,4 @@
+import 'package:cinephilia/ui/ad_state.dart';
 import 'package:cinephilia/ui/help.dart';
 import 'package:cinephilia/ui/movies_screen.dart';
 import 'package:cinephilia/ui/see_more.dart';
@@ -7,12 +8,19 @@ import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final initFuture = MobileAds.instance.initialize();
+  final adState = AdState(initFuture);
+
   runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
-    child: MyApp(),
+    child: Provider.value(
+      value: adState,
+      builder: (context, child) => MyApp(),
+    ),
   ));
 }
 
@@ -24,6 +32,24 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int b = 1;
   DrawerSelection _drawerSelection = DrawerSelection.movies;
+  // late BannerAd banner;
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   super.didChangeDependencies();
+  //   final adState = Provider.of<AdState>(context);
+  //   adState.initialization.then((value) {
+  //     setState(() {
+  //       banner = BannerAd(
+  //           size: AdSize.banner,
+  //           adUnitId: adState.bannerAdUnit,
+  //           listener: adState.adListener,
+  //           request: AdRequest())
+  //         ..load();
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +176,12 @@ class _MyAppState extends State<MyApp> {
                             ],
                           ),
                         ),
+                        // bottomSheet:  Container(
+                        //         height: 50,
+                        //         child: AdWidget(
+                        //           ad: banner,
+                        //         ),
+                        //       ),
                         body: b == 2 ? SeriesScreen() : MoviesScreen(),
                       ),
                     ),

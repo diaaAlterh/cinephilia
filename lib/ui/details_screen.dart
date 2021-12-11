@@ -74,7 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           physics: BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
-              expandedHeight: MediaQuery.of(context).size.height / 2.5,
+              expandedHeight: MediaQuery.of(context).size.height /2,
               collapsedHeight: 57,
               stretch: true,
               pinned: true,
