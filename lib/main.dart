@@ -6,14 +6,24 @@ import 'package:cinephilia/ui/series_screen.dart';
 import 'package:cinephilia/utils/ThemeManager.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
+  List<String> testDeviceIds = ['44BFC0F943FD08F178B31E6FB48644C5'];
+
   WidgetsFlutterBinding.ensureInitialized();
   final initFuture = MobileAds.instance.initialize();
   final adState = AdState(initFuture);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+  RequestConfiguration configuration =
+  RequestConfiguration(testDeviceIds: testDeviceIds);
+  MobileAds.instance.updateRequestConfiguration(configuration);
 
   runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
@@ -32,25 +42,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int b = 1;
   DrawerSelection _drawerSelection = DrawerSelection.movies;
-  // late BannerAd banner;
-  //
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   final adState = Provider.of<AdState>(context);
-  //   adState.initialization.then((value) {
-  //     setState(() {
-  //       banner = BannerAd(
-  //           size: AdSize.banner,
-  //           adUnitId: adState.bannerAdUnit,
-  //           listener: adState.adListener,
-  //           request: AdRequest())
-  //         ..load();
-  //     });
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
@@ -162,7 +153,7 @@ class _MyAppState extends State<MyApp> {
                                 },
                               ),
                               ListTile(
-                                title: Text('Help'),
+                                title: Text('Privacy Policy'),
                                 leading: Icon(
                                   Icons.help,
                                   color: Colors.blue,

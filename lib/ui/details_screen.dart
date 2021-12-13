@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String id;
@@ -23,12 +23,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   late Download download;
   ScrollController scrollController = ScrollController();
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     detailsBloc.id = widget.id;
     detailsBloc.fetch();
+    _createInterstitialAd();
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
     final iOS = IOSInitializationSettings();
@@ -51,10 +54,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             } else if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             }
-            return const Center(child: SpinKitWave(
-              color: Colors.blue,
-              size: 50.0,
-            ));
+            return const Center(child: CircularProgressIndicator());
           }),
     );
   }
@@ -74,7 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           physics: BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
-              expandedHeight: MediaQuery.of(context).size.height /2,
+              expandedHeight: MediaQuery.of(context).size.height / 2,
               collapsedHeight: 57,
               stretch: true,
               pinned: true,
@@ -161,7 +161,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     ),
                                     margin: EdgeInsets.only(left: 10),
                                     child: Text(
-                                        '${data.data.movie.genres[index]}',style: TextStyle(color: Colors.white),));
+                                      '${data.data.movie.genres[index]}',
+                                      style: TextStyle(color: Colors.white),
+                                    ));
                               }),
                         ),
                         Container(
@@ -173,7 +175,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            print('button tabbed');
+                            _showInterstitialAd();
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -254,11 +256,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         GestureDetector(
                           onTap: () async {
+                            _showInterstitialAd();
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text('Choose Server'),
+                                    actions: [
+                                      Text(
+                                          'notice: some of the servers maybe not working properly'),
+                                    ],
                                     content: Container(
                                       height: 310.0,
                                       // Change as per your requirement
@@ -301,9 +308,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                               title: Text('Server 4'),
                                               subtitle: Text('video src'),
                                             ),
-                                            Divider(),
-                                            Text(
-                                                'notice: some of the server maybe not working properly'),
                                           ],
                                         ),
                                       ), // Change as per your requirement
@@ -371,5 +375,45 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
       ],
     );
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: 'ca-app-pub-7255088691557445/5379791988',
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad loaded');
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error.');
+          },
+        ));
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+    );
+    _interstitialAd!.show();
+    _interstitialAd = null;
   }
 }

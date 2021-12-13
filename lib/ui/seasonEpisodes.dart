@@ -3,8 +3,8 @@ import 'package:cinephilia/bloc/season_bloc.dart';
 import 'package:cinephilia/model/season_model.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SeasonEpisode extends StatefulWidget {
   final String id;
@@ -18,8 +18,10 @@ class SeasonEpisode extends StatefulWidget {
 }
 
 class _SeasonEpisodeState extends State<SeasonEpisode> {
+  InterstitialAd? _interstitialAd;
   @override
   void initState() {
+    _createInterstitialAd();
     // TODO: implement initState
     super.initState();
     seasonBloc.id = widget.id;
@@ -63,6 +65,7 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                             color: Colors.orange.withOpacity(0.05),
                             child: ListTile(
                               onTap: () {
+                                _showInterstitialAd();
                                 print('button tabbed');
                                 showDialog(
                                     context: context,
@@ -70,7 +73,7 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                       return AlertDialog(
                                         title: Text('Choose Server'),
                                         content: Container(
-                                          height: 300.0,
+                                          height: 302.0,
                                           // Change as per your requirement
                                           width: 300.0,
                                           child: SingleChildScrollView(
@@ -82,7 +85,8 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                                         'https://googlvideo.com/tmdb_api.php?se=${widget.s}&ep=${snapshot.data!.episodes[index].episodeNumber}&tmdb=${widget.id}&server_name=vcu');
                                                   },
                                                   title: Text('Server 1'),
-                                                  subtitle: Text('google video'),
+                                                  subtitle:
+                                                      Text('google video'),
                                                 ),
                                                 Divider(),
                                                 ListTile(
@@ -129,22 +133,32 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                     borderRadius: BorderRadius.circular(1000),
                                     child: Image.network(
                                         'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${snapshot.data?.episodes[index].stillPath}',
-                                        loadingBuilder: (context, child,
-                                            loadingProgress) {
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
                                           if (loadingProgress == null)
                                             return child;
 
                                           return Shimmer.fromColors(
                                             baseColor:
-                                            Theme.of(context).cardColor,
+                                                Theme.of(context).cardColor,
                                             highlightColor:
-                                            Colors.white.withOpacity(0.6),
+                                                Colors.white.withOpacity(0.6),
                                             child: Container(
                                               color: Colors.white,
                                             ),
                                           );
-                                        },fit: BoxFit.fill,)
-                                ),
+                                        },
+                                        fit: BoxFit.fill,
+                                        errorBuilder:
+                                            (context, child, loadingProgress) {
+                                          print('error in pic');
+
+                                          if (loadingProgress == null)
+                                            return SizedBox();
+                                          print('error in pic');
+
+                                          return Container();
+                                        })),
                               ),
                               trailing: Column(
                                 children: [
@@ -153,7 +167,12 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                                     color: Colors.amber,
                                     size: 40,
                                   ),
-                                  Text(snapshot.data!.episodes[index].voteAverage.toString().substring(0,3),style: TextStyle(color: Colors.white),)
+                                  Text(
+                                    snapshot.data!.episodes[index].voteAverage
+                                        .toString()
+                                        .substring(0, 3),
+                                    style: TextStyle(color: Colors.white),
+                                  )
                                 ],
                               ),
                             ),
@@ -163,10 +182,49 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                 ],
               );
             } else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
+              return Center(child: Text('No Internet'),);
             }
             return const Center(child: CircularProgressIndicator());
           }),
     );
+  }
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: 'ca-app-pub-7255088691557445/5379791988',
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad loaded');
+            _interstitialAd = ad;
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error.');
+          },
+        ));
+  }
+
+  void _showInterstitialAd() {
+    print('hola');
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+    );
+    _interstitialAd!.show();
+    _interstitialAd = null;
   }
 }

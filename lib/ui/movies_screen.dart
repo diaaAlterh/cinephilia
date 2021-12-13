@@ -15,6 +15,10 @@ class MoviesScreen extends StatefulWidget {
 }
 
 class _MoviesScreenState extends State<MoviesScreen> {
+
+
+
+
   late List itemList=[
     helper.title('Most Popular', 1, context),
     helper.buildMovies(ytsPopularBloc.ytsPopular, context, true),
@@ -49,6 +53,8 @@ class _MoviesScreenState extends State<MoviesScreen> {
       }});
   }
 
+
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +63,6 @@ class _MoviesScreenState extends State<MoviesScreen> {
     ytsPopularBloc.fetch();
     ytsRecentBloc.fetch();
     ytsDownloadBloc.fetch();
-
   }
 
   @override
