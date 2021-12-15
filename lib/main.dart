@@ -1,4 +1,7 @@
+import 'package:cinephilia/bloc/tmdb_search_bloc.dart';
+import 'package:cinephilia/bloc/yts_search_bloc.dart';
 import 'package:cinephilia/ui/ad_state.dart';
+import 'package:cinephilia/ui/geners_screen.dart';
 import 'package:cinephilia/ui/help.dart';
 import 'package:cinephilia/ui/movies_screen.dart';
 import 'package:cinephilia/ui/see_more.dart';
@@ -63,7 +66,7 @@ class _MyAppState extends State<MyApp> {
                           actions: [
                             IconButton(
                               onPressed: () {
-                                helper.goTo(context, SeeMore(b == 1 ? 0 : 6));
+                                helper.goTo(context, SeeMore(b == 1 ? 0 : 6,b==1?ytsSearchBloc.ytsSearch:tmdbSearchBloc.tmdbSearch));
                               },
                               tooltip: 'Search',
                               icon: Icon(
@@ -122,6 +125,18 @@ class _MyAppState extends State<MyApp> {
                                   setState(() {});
                                   _drawerSelection = DrawerSelection.tvShows;
                                   helper.goBack(context);
+                                },
+                              ),
+                              ListTile(
+                                title: Text('Movies Genres'),
+                                leading: Icon(
+                                  Icons.list,
+                                  color: Colors.blue,
+                                ),
+                                onTap: () {
+                                  helper.goBack(context);
+
+                                  helper.goTo(context, GenersScreen());
                                 },
                               ),
                               ListTile(

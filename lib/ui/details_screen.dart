@@ -379,7 +379,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   void _createInterstitialAd() {
     InterstitialAd.load(
-        adUnitId: 'ca-app-pub-7255088691557445/5379791988',
+        adUnitId: 'ca-app-pub-3940256099942544/8691691433',
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {

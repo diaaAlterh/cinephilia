@@ -1,3 +1,4 @@
+import 'package:cinephilia/bloc/geners_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_onTheAir_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_popular_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_rated_bloc.dart';
@@ -16,8 +17,10 @@ import 'details_screen.dart';
 
 class SeeMore extends StatefulWidget {
   final int bloc;
+  final Stream stream;
+  final String genre;
 
-  const SeeMore(this.bloc);
+  const SeeMore(this.bloc, this.stream, {this.genre = ''});
 
   @override
   _SeeMoreState createState() => _SeeMoreState();
@@ -47,23 +50,25 @@ class _SeeMoreState extends State<SeeMore> {
               ? Text(
                   (widget.bloc == 0 || widget.bloc == 6)
                       ? ''
-                      : (widget.bloc == 1)
-                          ? 'Most Popular List'
-                          : (widget.bloc == 2)
-                              ? 'Top Rated List'
-                              : (widget.bloc == 3)
-                                  ? 'Most Downloaded List'
-                                  : (widget.bloc == 4)
-                                      ? '${DateTime.now().year} List'
-                                      : (widget.bloc == 5)
-                                          ? 'Recently Added List'
-                                          : (widget.bloc == 7)
-                                              ? 'Trending TV Shows List'
-                                              : (widget.bloc == 8)
-                                                  ? 'Top Rated TV Shows List'
-                                                  : (widget.bloc == 9)
-                                                      ? 'Most Popular TV Shows List'
-                                                      : '',
+                      : (widget.bloc == -1)
+                          ? '${widget.genre} Movies List'
+                          : (widget.bloc == 1)
+                              ? 'Most Popular Movies List'
+                              : (widget.bloc == 2)
+                                  ? 'Top Rated Movies List'
+                                  : (widget.bloc == 3)
+                                      ? 'Most Downloaded Movies List'
+                                      : (widget.bloc == 4)
+                                          ? '${DateTime.now().year} Movies List'
+                                          : (widget.bloc == 5)
+                                              ? 'Recently Added Movies List'
+                                              : (widget.bloc == 7)
+                                                  ? 'Trending TV Shows List'
+                                                  : (widget.bloc == 8)
+                                                      ? 'Top Rated TV Shows List'
+                                                      : (widget.bloc == 9)
+                                                          ? 'Most Popular TV Shows List'
+                                                          : '',
                   style: TextStyle(fontSize: 18),
                 )
               : TextField(
@@ -139,6 +144,8 @@ class _SeeMoreState extends State<SeeMore> {
                                                   .toString()
                                               : (widget.bloc == 9)
                                                   ? tmdbPopularBloc.pageNumber
+                                                      .toString(): (widget.bloc == -1)
+                                                  ? genresBloc.pageNumber
                                                       .toString()
                                                   : '',
                   style: TextStyle(fontSize: 20),
@@ -148,7 +155,7 @@ class _SeeMoreState extends State<SeeMore> {
               IconButton(
                   tooltip: 'forward',
                   onPressed: () {
-                    loadItems();
+                    loadItems(b: widget.bloc==-1?true:false);
                     scrollController.animateTo(0,
                         duration: Duration(seconds: 1), curve: Curves.linear);
                   },
@@ -157,17 +164,7 @@ class _SeeMoreState extends State<SeeMore> {
         ),
         body: Column(
           children: [
-            if (widget.bloc == 0) buildGrid(ytsSearchBloc.ytsSearch, true),
-            if (widget.bloc == 1) buildGrid(ytsPopularBloc.ytsPopular, true),
-            if (widget.bloc == 2) buildGrid(ytsRatedBloc.ytsRated, true),
-            if (widget.bloc == 3) buildGrid(ytsDownloadBloc.ytsDownload, true),
-            if (widget.bloc == 4) buildGrid(ytsBloc.yts, true),
-            if (widget.bloc == 5) buildGrid(ytsRecentBloc.ytsRecent, true),
-            if (widget.bloc == 6) buildGrid(tmdbSearchBloc.tmdbSearch, false),
-            if (widget.bloc == 7)
-              buildGrid(tmdbOnTheAirBloc.tmdbOnTheAir, false),
-            if (widget.bloc == 8) buildGrid(tmdbRatedBloc.tmdbRated, false),
-            if (widget.bloc == 9) buildGrid(tmdbPopularBloc.tmdbPopular, false),
+            buildGrid((widget.bloc < 6) ? true : false),
           ],
         ),
       ),
@@ -262,11 +259,21 @@ class _SeeMoreState extends State<SeeMore> {
         print(tmdbPopularBloc.pageNumber);
         tmdbPopularBloc.fetch();
       }
+    }if (widget.bloc == -1) {
+      if (genresBloc.pageNumber != 1) {
+        if (b == true) {
+          genresBloc.pageNumber = 1;
+        } else {
+          genresBloc.pageNumber--;
+        }
+        print(genresBloc.pageNumber);
+        genresBloc.fetch();
+      }
     }
     setState(() {});
   }
 
-  loadItems() {
+  loadItems({bool b=false}) {
     if (widget.bloc == 1) {
       ytsPopularBloc.pageNumber++;
       print(ytsPopularBloc.pageNumber);
@@ -307,14 +314,19 @@ class _SeeMoreState extends State<SeeMore> {
       print(tmdbPopularBloc.pageNumber);
       tmdbPopularBloc.fetch();
     }
+    if (widget.bloc == -1) {
+      genresBloc.genre = widget.genre;
+      if(b==true){genresBloc.pageNumber++;}
+      print(genresBloc.pageNumber);
+      genresBloc.fetch();
+    }
     setState(() {});
   }
 
   Widget Shimmery(double width) {
     return Shimmer.fromColors(
       baseColor: Theme.of(context).cardColor,
-      highlightColor:
-      Colors.white.withOpacity(0.6),
+      highlightColor: Colors.white.withOpacity(0.6),
       child: Container(
         width: width,
         color: Colors.white,
@@ -322,12 +334,12 @@ class _SeeMoreState extends State<SeeMore> {
     );
   }
 
-  Widget buildGrid(Stream stream, bool isyts) {
+  Widget buildGrid(bool isyts) {
     return Expanded(
         child: Container(
       // margin: EdgeInsets.only(left: 20, top: 20),
       child: StreamBuilder(
-          stream: stream,
+          stream: widget.stream,
           builder: (context, AsyncSnapshot snapshot) {
             // if(snapshot.data?.data?.movies.length==0){
             //   return Center(child: Text('make sure you type a correct movie name'));
@@ -348,7 +360,7 @@ class _SeeMoreState extends State<SeeMore> {
                         : snapshot.data!.results.length,
                     itemBuilder: (BuildContext ctx, index) {
                       return Container(
-                        margin: EdgeInsets.only(left: 15,top: 20,right: 5),
+                        margin: EdgeInsets.only(left: 15, top: 20, right: 5),
                         child: Stack(
                           children: [
                             GestureDetector(
@@ -381,12 +393,14 @@ class _SeeMoreState extends State<SeeMore> {
                                           (context, child, loadingProgress) {
                                     print('error in pic');
 
-                                    if (loadingProgress == null) return SizedBox();
+                                    if (loadingProgress == null)
+                                      return SizedBox();
                                     print('error in pic');
 
                                     return Center(
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.movie,
@@ -430,7 +444,8 @@ class _SeeMoreState extends State<SeeMore> {
                                   width: 120,
                                   child: Text(
                                     isyts
-                                        ? snapshot.data!.data.movies[index].title
+                                        ? snapshot
+                                            .data!.data.movies[index].title
                                         : snapshot.data!.results[index].name,
                                     style: TextStyle(
                                         fontSize: 14, color: Colors.white),
@@ -449,7 +464,10 @@ class _SeeMoreState extends State<SeeMore> {
                                   gradient: LinearGradient(
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
-                                      colors: [Colors.blueAccent, Colors.lightBlueAccent]),
+                                      colors: [
+                                        Colors.blueAccent,
+                                        Colors.lightBlueAccent
+                                      ]),
                                 ),
                                 margin: EdgeInsets.only(top: 10, right: 18),
                                 child: Center(
@@ -457,7 +475,8 @@ class _SeeMoreState extends State<SeeMore> {
                                   isyts
                                       ? snapshot.data!.data.movies[index].rating
                                           .toString()
-                                      : snapshot.data!.results[index].voteAverage
+                                      : snapshot
+                                          .data!.results[index].voteAverage
                                           .toString(),
                                   style: TextStyle(color: Colors.white),
                                 )),

@@ -27,7 +27,7 @@ class Helper {
     Navigator.of(context).pop();
   }
 
-  Widget title(String title, int bloc, BuildContext context) {
+  Widget title(String title, int bloc, BuildContext context,Stream stream) {
     return ListTile(
       title: Text(
         '$title',
@@ -35,7 +35,7 @@ class Helper {
       ),
       trailing: TextButton(
         onPressed: () {
-          helper.goTo(context, SeeMore(bloc));
+          helper.goTo(context, SeeMore(bloc,stream));
         },
         child: Text(
           'See more',

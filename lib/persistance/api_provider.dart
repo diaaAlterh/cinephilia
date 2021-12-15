@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' show Client, Response;
 
 class ApiProvider {
-
   Client client = Client();
 
   ///this method for all Apis
@@ -33,6 +32,19 @@ class ApiProvider {
       Response response = await _dataLoader(
           url:
               'https://yts.mx/api/v2/list_movies.json?page=$pageNumber&sort_by=year&limit=50');
+      return Yts.fromJson(json.decode(response.body));
+    } catch (e) {
+      print('Error: $e');
+      // return null;
+    }
+  }
+
+  ///get yts movies by year
+  Future<Yts?> fetchGenres(int pageNumber,String genre) async {
+    try {
+      Response response = await _dataLoader(
+          url:
+              'https://yts.mx/api/v2/list_movies.json?genre=$genre&limit=50&sort_by=like_count&page=$pageNumber');
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
@@ -134,10 +146,10 @@ class ApiProvider {
   /// search movies yts
   Future<Yts?> fetchYtsSearch(String searchText) async {
     try {
-    Response response = await _dataLoader(
-        url:
-            'https://yts.mx/api/v2/list_movies.json?query_term=$searchText&limit=50&sort_by=download_count');
-    return Yts.fromJson(json.decode(response.body));
+      Response response = await _dataLoader(
+          url:
+              'https://yts.mx/api/v2/list_movies.json?query_term=$searchText&limit=50&sort_by=download_count');
+      return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
     }

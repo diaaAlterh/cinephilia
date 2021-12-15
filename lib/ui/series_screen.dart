@@ -14,11 +14,11 @@ class SeriesScreen extends StatefulWidget {
 
 class _SeriesScreenState extends State<SeriesScreen> {
   late List itemList=[
-    helper.title('Trending', 7, context),
+    helper.title('Trending', 7, context,tmdbOnTheAirBloc.tmdbOnTheAir),
     helper.buildMovies(tmdbOnTheAirBloc.tmdbOnTheAir,context,false),
-    helper.title('Top Rated', 8, context),
+    helper.title('Top Rated', 8, context,tmdbRatedBloc.tmdbRated),
     helper.buildMovies(tmdbRatedBloc.tmdbRated,context,false),
-    helper.title('Most Popular', 9, context),
+    helper.title('Most Popular', 9, context,tmdbPopularBloc.tmdbPopular),
     helper.buildMovies(tmdbPopularBloc.tmdbPopular,context,false),
   ];
 

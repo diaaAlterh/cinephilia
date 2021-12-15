@@ -20,15 +20,15 @@ class _MoviesScreenState extends State<MoviesScreen> {
 
 
   late List itemList=[
-    helper.title('Most Popular', 1, context),
+    helper.title('Most Popular', 1, context,ytsPopularBloc.ytsPopular),
     helper.buildMovies(ytsPopularBloc.ytsPopular, context, true),
-    helper.title('Top Rated', 2, context),
+    helper.title('Top Rated', 2, context,ytsRatedBloc.ytsRated),
     helper.buildMovies(ytsRatedBloc.ytsRated, context, true),
-    helper.title('Most Downloaded', 3, context),
+    helper.title('Most Downloaded', 3, context,ytsDownloadBloc.ytsDownload),
     helper.buildMovies(ytsDownloadBloc.ytsDownload, context, true),
-    helper.title('Recently Added', 5, context),
+    helper.title('Recently Added', 5, context,ytsRecentBloc.ytsRecent),
     helper.buildMovies(ytsRecentBloc.ytsRecent, context, true),
-    helper.title('New Movies (${DateTime.now().year})', 4, context),
+    helper.title('New Movies (${DateTime.now().year})', 4, context,ytsBloc.yts),
     helper.buildMovies(ytsBloc.yts, context, true),
   ];
 
