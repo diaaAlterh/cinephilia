@@ -1,12 +1,12 @@
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 
-class Help extends StatefulWidget {
+class privacyPolicy extends StatefulWidget {
   @override
-  _HelpState createState() => _HelpState();
+  _privacyPolicyState createState() => _privacyPolicyState();
 }
 
-class _HelpState extends State<Help> {
+class _privacyPolicyState extends State<privacyPolicy> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

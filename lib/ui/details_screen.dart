@@ -2,13 +2,13 @@
 
 import 'package:cinephilia/bloc/details_bloc.dart';
 import 'package:cinephilia/model/details_model.dart';
+import 'package:cinephilia/utils/ads_handler.dart';
 import 'package:cinephilia/utils/download.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String id;
@@ -23,15 +23,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   late Download download;
   ScrollController scrollController = ScrollController();
-  InterstitialAd? _interstitialAd;
-  int _numInterstitialLoadAttempts = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     detailsBloc.id = widget.id;
     detailsBloc.fetch();
-    _createInterstitialAd();
+    adsHandler.createInterstitialAd();
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
     final iOS = IOSInitializationSettings();
@@ -175,7 +173,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            _showInterstitialAd();
+                            adsHandler.showInterstitialAd();
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -256,7 +254,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            _showInterstitialAd();
+                            adsHandler.showInterstitialAd();
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -375,45 +373,5 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
       ],
     );
-  }
-
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: 'ca-app-pub-3940256099942544/8691691433',
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print('$ad loaded');
-            _interstitialAd = ad;
-            _numInterstitialLoadAttempts = 0;
-            _interstitialAd!.setImmersiveMode(true);
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error.');
-          },
-        ));
-  }
-
-  void _showInterstitialAd() {
-    if (_interstitialAd == null) {
-      print('Warning: attempt to show interstitial before loaded.');
-      return;
-    }
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-    );
-    _interstitialAd!.show();
-    _interstitialAd = null;
   }
 }

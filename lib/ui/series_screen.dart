@@ -1,11 +1,10 @@
 import 'package:cinephilia/bloc/tmdb_onTheAir_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_popular_bloc.dart';
 import 'package:cinephilia/bloc/tmdb_rated_bloc.dart';
-import 'package:cinephilia/ui/ad_state.dart';
+import 'package:cinephilia/utils/ads_handler.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 
 class SeriesScreen extends StatefulWidget {
   @override
@@ -13,35 +12,23 @@ class SeriesScreen extends StatefulWidget {
 }
 
 class _SeriesScreenState extends State<SeriesScreen> {
-  late List itemList=[
-    helper.title('Trending', 7, context,tmdbOnTheAirBloc.tmdbOnTheAir),
-    helper.buildMovies(tmdbOnTheAirBloc.tmdbOnTheAir,context,false),
-    helper.title('Top Rated', 8, context,tmdbRatedBloc.tmdbRated),
-    helper.buildMovies(tmdbRatedBloc.tmdbRated,context,false),
-    helper.title('Most Popular', 9, context,tmdbPopularBloc.tmdbPopular),
-    helper.buildMovies(tmdbPopularBloc.tmdbPopular,context,false),
-  ];
+  late List itemList;
 
   @override
-  Future<void> didChangeDependencies() async {
+  didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    final adState = Provider.of<AdState>(context);
-    await adState.initialization.then((value) {
-      for(int i=itemList.length-2;i>=1;i-=2){
-        itemList.insert(i,  BannerAd(
-            size: AdSize.banner,
-            adUnitId: adState.bannerAdUnit,
-            listener: adState.adListener,
-            request: AdRequest())
-          ..load().whenComplete(() {
-            setState(() {
-
-            });
-          }));
-
-      }});
+    itemList = [
+      helper.title('Trending', 7, context, tmdbOnTheAirBloc.tmdbOnTheAir),
+      helper.buildMovies(tmdbOnTheAirBloc.tmdbOnTheAir, context, false),
+      helper.title('Top Rated', 8, context, tmdbRatedBloc.tmdbRated),
+      helper.buildMovies(tmdbRatedBloc.tmdbRated, context, false),
+      helper.title('Most Popular', 9, context, tmdbPopularBloc.tmdbPopular),
+      helper.buildMovies(tmdbPopularBloc.tmdbPopular, context, false),
+    ];
+    adsHandler.CreateBannerAd(itemList);
   }
+
   @override
   void initState() {
     super.initState();
@@ -54,27 +41,28 @@ class _SeriesScreenState extends State<SeriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: (){
+        onRefresh: () {
           tmdbRatedBloc.fetch();
           tmdbPopularBloc.fetch();
           tmdbOnTheAirBloc.fetch();
           return Future.delayed(Duration(seconds: 2));
         },
         child: ListView.builder(
-          itemBuilder: (context ,index){
-            if(itemList[index] is Widget){
+          itemBuilder: (context, index) {
+            if (itemList[index] is Widget) {
               return itemList[index] as Widget;
-            }else{
+            } else {
               return Container(
                 height: 50,
-                child: AdWidget(ad: itemList[index] as BannerAd,),
+                child: AdWidget(
+                  ad: itemList[index] as BannerAd,
+                ),
               );
             }
-
           },
           itemCount: itemList.length,
-          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         ),
       ),
     );

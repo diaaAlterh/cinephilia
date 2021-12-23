@@ -111,14 +111,7 @@ class Helper {
                                         (context, child, loadingProgress) {
                                   if (loadingProgress == null) return child;
 
-                                  return Shimmer.fromColors(
-                                    baseColor: Theme.of(context).cardColor,
-                                    highlightColor:
-                                        Colors.white.withOpacity(0.6),
-                                    child: Container(
-                                      color: Colors.white,
-                                    ),
-                                  );
+                                  return Shimmery(context);
                                 })),
                           ),
                         ),
@@ -186,6 +179,16 @@ class Helper {
             }
             return const Center(child: Text(''));
           }),
+    );
+  }
+
+  Widget Shimmery(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Theme.of(context).cardColor,
+      highlightColor: Colors.white.withOpacity(0.6),
+      child: Container(
+        color: Colors.white,
+      ),
     );
   }
 

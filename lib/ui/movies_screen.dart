@@ -3,11 +3,10 @@ import 'package:cinephilia/bloc/yts_download_bloc.dart';
 import 'package:cinephilia/bloc/yts_popular_bloc.dart';
 import 'package:cinephilia/bloc/yts_rated_bloc.dart';
 import 'package:cinephilia/bloc/yts_recent_bloc.dart';
-import 'package:cinephilia/ui/ad_state.dart';
+import 'package:cinephilia/utils/ads_handler.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 
 class MoviesScreen extends StatefulWidget {
   @override
@@ -15,45 +14,27 @@ class MoviesScreen extends StatefulWidget {
 }
 
 class _MoviesScreenState extends State<MoviesScreen> {
-
-
-
-
-  late List itemList=[
-    helper.title('Most Popular', 1, context,ytsPopularBloc.ytsPopular),
-    helper.buildMovies(ytsPopularBloc.ytsPopular, context, true),
-    helper.title('Top Rated', 2, context,ytsRatedBloc.ytsRated),
-    helper.buildMovies(ytsRatedBloc.ytsRated, context, true),
-    helper.title('Most Downloaded', 3, context,ytsDownloadBloc.ytsDownload),
-    helper.buildMovies(ytsDownloadBloc.ytsDownload, context, true),
-    helper.title('Recently Added', 5, context,ytsRecentBloc.ytsRecent),
-    helper.buildMovies(ytsRecentBloc.ytsRecent, context, true),
-    helper.title('New Movies (${DateTime.now().year})', 4, context,ytsBloc.yts),
-    helper.buildMovies(ytsBloc.yts, context, true),
-  ];
+  late List itemList;
 
   @override
-  Future<void> didChangeDependencies() async {
+  didChangeDependencies()  {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    final adState = Provider.of<AdState>(context);
-    await adState.initialization.then((value) {
-      for(int i=itemList.length-2;i>=1;i-=2){
-        itemList.insert(i,  BannerAd(
-            size: AdSize.banner,
-            adUnitId: adState.bannerAdUnit,
-            listener: adState.adListener,
-            request: AdRequest())
-          ..load().whenComplete(() {
-            setState(() {
-
-            });
-          }));
-
-      }});
+    itemList = [
+      helper.title('Most Popular', 1, context, ytsPopularBloc.ytsPopular),
+      helper.buildMovies(ytsPopularBloc.ytsPopular, context, true),
+      helper.title('Top Rated', 2, context, ytsRatedBloc.ytsRated),
+      helper.buildMovies(ytsRatedBloc.ytsRated, context, true),
+      helper.title('Most Downloaded', 3, context, ytsDownloadBloc.ytsDownload),
+      helper.buildMovies(ytsDownloadBloc.ytsDownload, context, true),
+      helper.title('Recently Added', 5, context, ytsRecentBloc.ytsRecent),
+      helper.buildMovies(ytsRecentBloc.ytsRecent, context, true),
+      helper.title(
+          'New Movies (${DateTime.now().year})', 4, context, ytsBloc.yts),
+      helper.buildMovies(ytsBloc.yts, context, true),
+    ];
+    adsHandler.CreateBannerAd(itemList);
   }
-
-
 
   @override
   void initState() {
@@ -76,23 +57,23 @@ class _MoviesScreenState extends State<MoviesScreen> {
           ytsRecentBloc.fetch();
           ytsDownloadBloc.fetch();
           return Future.delayed(Duration(seconds: 2));
-
         },
         child: ListView.builder(
-          itemBuilder: (context ,index){
-            if(itemList[index] is Widget){
+          itemBuilder: (context, index) {
+            if (itemList[index] is Widget) {
               return itemList[index] as Widget;
-            }else{
+            } else {
               return Container(
                 height: 50,
-                child: AdWidget(ad: itemList[index] as BannerAd,),
+                child: AdWidget(
+                  ad: itemList[index] as BannerAd,
+                ),
               );
             }
-
           },
           itemCount: itemList.length,
-          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         ),
       ),
     );

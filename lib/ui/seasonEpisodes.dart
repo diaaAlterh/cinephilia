@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:cinephilia/bloc/season_bloc.dart';
 import 'package:cinephilia/model/season_model.dart';
+import 'package:cinephilia/utils/ads_handler.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SeasonEpisode extends StatefulWidget {
@@ -18,10 +18,9 @@ class SeasonEpisode extends StatefulWidget {
 }
 
 class _SeasonEpisodeState extends State<SeasonEpisode> {
-  InterstitialAd? _interstitialAd;
   @override
   void initState() {
-    _createInterstitialAd();
+    adsHandler.createInterstitialAd();
     // TODO: implement initState
     super.initState();
     seasonBloc.id = widget.id;
@@ -65,7 +64,7 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
                             color: Colors.orange.withOpacity(0.05),
                             child: ListTile(
                               onTap: () {
-                                _showInterstitialAd();
+                                adsHandler.showInterstitialAd();
                                 print('button tabbed');
                                 showDialog(
                                     context: context,
@@ -187,44 +186,5 @@ class _SeasonEpisodeState extends State<SeasonEpisode> {
             return const Center(child: CircularProgressIndicator());
           }),
     );
-  }
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: 'ca-app-pub-3940256099942544/8691691433',
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print('$ad loaded');
-            _interstitialAd = ad;
-            _interstitialAd!.setImmersiveMode(true);
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error.');
-          },
-        ));
-  }
-
-  void _showInterstitialAd() {
-    print('hola');
-    if (_interstitialAd == null) {
-      print('Warning: attempt to show interstitial before loaded.');
-      return;
-    }
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createInterstitialAd();
-      },
-    );
-    _interstitialAd!.show();
-    _interstitialAd = null;
   }
 }

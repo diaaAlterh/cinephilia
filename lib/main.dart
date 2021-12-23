@@ -1,39 +1,29 @@
 import 'package:cinephilia/bloc/tmdb_search_bloc.dart';
 import 'package:cinephilia/bloc/yts_search_bloc.dart';
-import 'package:cinephilia/ui/ad_state.dart';
 import 'package:cinephilia/ui/geners_screen.dart';
-import 'package:cinephilia/ui/help.dart';
+import 'package:cinephilia/ui/privacyPolicy.dart';
 import 'package:cinephilia/ui/movies_screen.dart';
 import 'package:cinephilia/ui/see_more.dart';
 import 'package:cinephilia/ui/series_screen.dart';
 import 'package:cinephilia/utils/ThemeManager.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
-  List<String> testDeviceIds = ['44BFC0F943FD08F178B31E6FB48644C5'];
-
   WidgetsFlutterBinding.ensureInitialized();
-  final initFuture = MobileAds.instance.initialize();
-  final adState = AdState(initFuture);
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
+
+  MobileAds.instance.initialize();
+  List<String> testDeviceIds = ['44BFC0F943FD08F178B31E6FB48644C5'];
   RequestConfiguration configuration =
   RequestConfiguration(testDeviceIds: testDeviceIds);
   MobileAds.instance.updateRequestConfiguration(configuration);
 
   runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
-    child: Provider.value(
-      value: adState,
-      builder: (context, child) => MyApp(),
-    ),
+    child:  MyApp(),
   ));
 }
 
@@ -109,7 +99,6 @@ class _MyAppState extends State<MyApp> {
                                   b = 1;
                                   _drawerSelection = DrawerSelection.movies;
                                   helper.goBack(context);
-                                  setState(() {});
                                 },
                               ),
                               ListTile(
@@ -122,7 +111,6 @@ class _MyAppState extends State<MyApp> {
                                 ),
                                 onTap: () {
                                   b = 2;
-                                  setState(() {});
                                   _drawerSelection = DrawerSelection.tvShows;
                                   helper.goBack(context);
                                 },
@@ -176,18 +164,12 @@ class _MyAppState extends State<MyApp> {
                                 onTap: () {
                                   helper.goBack(context);
 
-                                  helper.goTo(context, Help());
+                                  helper.goTo(context, privacyPolicy());
                                 },
                               ),
                             ],
                           ),
                         ),
-                        // bottomSheet:  Container(
-                        //         height: 50,
-                        //         child: AdWidget(
-                        //           ad: banner,
-                        //         ),
-                        //       ),
                         body: b == 2 ? SeriesScreen() : MoviesScreen(),
                       ),
                     ),

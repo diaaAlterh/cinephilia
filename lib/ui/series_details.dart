@@ -5,7 +5,6 @@ import 'package:cinephilia/ui/seasonEpisodes.dart';
 import 'package:cinephilia/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:shimmer/shimmer.dart';
 
 class SeriesDetails extends StatefulWidget {
   final String id;
@@ -98,7 +97,7 @@ class _SeriesDetailsState extends State<SeriesDetails> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                (BuildContext context, int index) {
                   return Container(
                     height: MediaQuery.of(context).size.height / 1.11,
                     child: Column(
@@ -116,7 +115,7 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                                 itemSize: 25,
                                 itemCount: 5,
                                 itemPadding:
-                                EdgeInsets.symmetric(horizontal: .0),
+                                    EdgeInsets.symmetric(horizontal: .0),
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
                                   color: Colors.amber,
@@ -132,7 +131,7 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                                 alignment: Alignment.topCenter,
                                 color: Colors.transparent,
                                 child: Text(
-                                    data.voteAverage.toString(),
+                                  data.voteAverage.toString(),
                                   style: TextStyle(fontSize: 30),
                                 ),
                               )
@@ -140,7 +139,8 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          margin:
+                              EdgeInsets.only(left: 20, right: 20, bottom: 20),
                           height: 20,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
@@ -156,20 +156,26 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                                     ),
                                     margin: EdgeInsets.only(left: 10),
                                     child: Container(
-                                      margin: EdgeInsets.only(left: 10,right: 10),
+                                      margin:
+                                          EdgeInsets.only(left: 10, right: 10),
                                       child: Text(
-                                        '${data.genres[index].name}',style: TextStyle(color: Colors.white),),
+                                        '${data.genres[index].name}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ));
                               }),
                         ),
-                        if(data.spokenLanguages.toString()!='[]')Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                          child: Text(
-                              'Spoken languages : ${data.spokenLanguages.first.englishName}\nProduction company : ${data.productionCompanies.first.name}\nstatus : ${data.status}\nTagline : ${data.tagline}\nfirst Air : ${data.firstAirDate}'),
-                        ),
+                        if (data.spokenLanguages.toString() != '[]')
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            margin: EdgeInsets.only(
+                                bottom: 20, left: 20, right: 20),
+                            child: Text(
+                                'Spoken languages : ${data.spokenLanguages.first.englishName}\nProduction company : ${data.productionCompanies.first.name}\nstatus : ${data.status}\nTagline : ${data.tagline}\nfirst Air : ${data.firstAirDate}'),
+                          ),
                         Container(
-                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          margin:
+                              EdgeInsets.only(left: 20, right: 20, bottom: 20),
                           child: Text(
                             data.overview,
                           ),
@@ -189,57 +195,58 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          helper.goTo(context, SeasonEpisode(
-                                              data.id.toString(),
-                                              data.seasons[index].seasonNumber,
-                                              id));
+                                          helper.goTo(
+                                              context,
+                                              SeasonEpisode(
+                                                  data.id.toString(),
+                                                  data.seasons[index]
+                                                      .seasonNumber,
+                                                  id));
                                         },
                                         child: Container(
-                                          margin: EdgeInsets.only(left: 10, right: 10),
+                                          margin: EdgeInsets.only(
+                                              left: 10, right: 10),
                                           width: 140,
                                           child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(15),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
                                               child: Image.network(
                                                   'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${data.seasons[index].posterPath}',
-                                                  loadingBuilder: (context, child,
-                                                      loadingProgress) {
-                                                    if (loadingProgress == null)
-                                                      return child;
+                                                  loadingBuilder: (context,
+                                                      child, loadingProgress) {
+                                                if (loadingProgress == null)
+                                                  return child;
 
-                                                    return Shimmer.fromColors(
-                                                      baseColor:
-                                                      Theme.of(context).cardColor,
-                                                      highlightColor:
-                                                      Colors.white.withOpacity(0.6),
-                                                      child: Container(
-                                                        color: Colors.white,
-                                                      ),
-                                                    );
-                                                  })),
+                                                return helper.Shimmery(context);
+                                              })),
                                         ),
                                       ),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           Container(
                                             width: 120,
                                             margin: EdgeInsets.only(left: 20),
                                             child: Text(
-                                              data.seasons[index].airDate.toString(),
+                                              data.seasons[index].airDate
+                                                  .toString(),
                                               style: TextStyle(
                                                   fontSize: 12,
-                                                  color: Colors.white.withOpacity(0.8)),
+                                                  color: Colors.white
+                                                      .withOpacity(0.8)),
                                             ),
                                           ),
                                           Container(
-                                            margin:
-                                            EdgeInsets.only(left: 20, bottom: 10),
+                                            margin: EdgeInsets.only(
+                                                left: 20, bottom: 10),
                                             // height: 18,
                                             width: 120,
                                             child: Text(
                                               data.seasons[index].name,
                                               style: TextStyle(
-                                                  fontSize: 14, color: Colors.white),
+                                                  fontSize: 14,
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ],
@@ -248,18 +255,24 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                                         width: 30,
                                         height: 30,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(40),
+                                          borderRadius:
+                                              BorderRadius.circular(40),
                                           gradient: LinearGradient(
                                               begin: Alignment.centerLeft,
                                               end: Alignment.centerRight,
-                                              colors: [Colors.blueAccent, Colors.lightBlueAccent]),
+                                              colors: [
+                                                Colors.blueAccent,
+                                                Colors.lightBlueAccent
+                                              ]),
                                         ),
-                                        margin: EdgeInsets.only(bottom: 170, left: 110),
+                                        margin: EdgeInsets.only(
+                                            bottom: 170, left: 110),
                                         child: Center(
                                             child: Text(
-                                              data.seasons[index].episodeCount.toString(),
-                                              style: TextStyle(color: Colors.white),
-                                            )),
+                                          data.seasons[index].episodeCount
+                                              .toString(),
+                                          style: TextStyle(color: Colors.white),
+                                        )),
                                       )
                                     ],
                                   );
@@ -277,7 +290,8 @@ class _SeriesDetailsState extends State<SeriesDetails> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                helper.launchURL('https://www.imdb.com/title/$id/');
+                                helper.launchURL(
+                                    'https://www.imdb.com/title/$id/');
                               },
                               child: Container(
                                 height: 100,
