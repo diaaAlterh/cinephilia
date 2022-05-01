@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:cinephilia/bloc/details_bloc.dart';
 import 'package:cinephilia/model/details_model.dart';
 import 'package:cinephilia/utils/ads_handler.dart';
@@ -26,7 +24,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     detailsBloc.id = widget.id;
     detailsBloc.fetch();
     adsHandler.createInterstitialAd();

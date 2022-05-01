@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final details = detailsFromJson(jsonString);
-
 import 'dart:convert';
 
 Details detailsFromJson(String str) => Details.fromJson(json.decode(str));

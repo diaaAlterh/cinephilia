@@ -34,6 +34,7 @@ class _SeeMoreState extends State<SeeMore> {
   void initState() {
     super.initState();
     loadItems();
+    print(widget.bloc);
   }
 
   @override

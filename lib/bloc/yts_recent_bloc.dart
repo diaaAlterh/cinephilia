@@ -1,6 +1,3 @@
-// ignore: file_names
-// ignore_for_file: file_names
-
 import 'package:cinephilia/model/yts_model.dart';
 import 'package:cinephilia/persistance/api_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -20,9 +17,7 @@ class YtsRecentBloc {
       Yts? ytsRecent = await fetchRecentYts();
       _ytsRecentBlocFetcher.sink.add(ytsRecent!);
     } catch (e) {
-      // ignore: avoid_print
       _ytsRecentBlocFetcher.sink.addError(e);
-      print('hhhhhhhhhhhhhhhhhh $e');
     }
   }
 

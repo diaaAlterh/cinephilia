@@ -1,6 +1,3 @@
-// ignore: file_names
-// ignore_for_file: file_names
-
 import 'package:cinephilia/model/yts_model.dart';
 import 'package:cinephilia/persistance/api_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -17,14 +14,12 @@ class GenresBloc {
   Stream<Yts> get genres => _genresBlocFetcher.stream;
 
   fetch() async {
-    // try {
+    try {
     Yts? yts = await fetchGenres();
     _genresBlocFetcher.sink.add(yts!);
-    // } catch (e) {
-    //   // ignore: avoid_print
-    //   _genresBlocFetcher.sink.addError(e);
-    //   print('hhhhhhhhhhhhhhhhhh $e');
-    // }
+    } catch (e) {
+      _genresBlocFetcher.sink.addError(e);
+    }
   }
 
   dispose() {

@@ -11,7 +11,7 @@ class _privacyPolicyState extends State<privacyPolicy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Help'),
+        title: Text('Privacy Policy'),
       ),
       body: Container(
         child: Center(
@@ -26,7 +26,7 @@ class _privacyPolicyState extends State<privacyPolicy> {
                     style: TextStyle(fontSize: 20),
                   ),
                   subtitle: Text(
-                    'is an online app that provide links that already available on the internet to stream movies And TV Shows,\n\nit acts as a client-side with no server to store any kind of data copyrighted or not,\n\nusing public api such as yts for movies information and torrent download links and the tmdb api for TV shows information and for streaming we just provide links that already exist on the internet such ad video database, google video and video src,\n\nso we do respect copyrighted content and we do not store any of the copyrighted content',
+                    'is an online app that provide links that already available on the internet to stream movies And TV Shows,\n\nit acts as a client-side without servers to store any kind of data copyrighted or not,\n\nusing public api such as yts for movies information and torrent download links and the tmdb api for TV shows information and for streaming we just provide links that already exist on the internet such as video database, google video and video src,\n\nso we do respect copyrighted content and we do not store any of the copyrighted content',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
@@ -36,7 +36,7 @@ class _privacyPolicyState extends State<privacyPolicy> {
                     style: TextStyle(fontSize: 20,color: Theme.of(context).errorColor),
                   ),
                   subtitle: Text(
-                    'downloading or watching free Movies & TV Shows is illegal and we do not support it and this app is directed to people who live in countries that does not have online payment to get an account for legal app like Netflix, Amazon Prime and Apple ,we recommend that anyone has access to legal website not to use this app',
+                    'downloading or watching free Movies & TV Shows is illegal and we do not support it and this app is directed to people who live in countries that does not have online payment to get an account for legal app like Netflix or Amazon Prime ,we recommend that anyone has access to legal website not to use this app',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),

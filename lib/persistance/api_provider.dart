@@ -35,12 +35,12 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
   ///get yts movies by year
-  Future<Yts?> fetchGenres(int pageNumber,String genre) async {
+  Future<Yts?> fetchGenres(int pageNumber, String genre) async {
     try {
       Response response = await _dataLoader(
           url:
@@ -48,7 +48,7 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -61,7 +61,7 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -74,7 +74,7 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -87,7 +87,7 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -100,7 +100,7 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -113,7 +113,7 @@ class ApiProvider {
       return Tmdb.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -126,7 +126,7 @@ class ApiProvider {
       return Tmdb.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -139,7 +139,7 @@ class ApiProvider {
       return Tmdb.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
-      // return null;
+      return null;
     }
   }
 
@@ -152,6 +152,7 @@ class ApiProvider {
       return Yts.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
+      return null;
     }
   }
 
@@ -164,6 +165,7 @@ class ApiProvider {
       return Tmdb.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
+      return null;
     }
   }
 
@@ -177,6 +179,7 @@ class ApiProvider {
       return SeasonModel.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
+      return null;
     }
   }
 
@@ -189,6 +192,7 @@ class ApiProvider {
       return Details.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
+      return null;
     }
   }
 
@@ -201,6 +205,7 @@ class ApiProvider {
       return TmdbDetails.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
+      return null;
     }
   }
 
@@ -213,6 +218,7 @@ class ApiProvider {
       return ConvertId.fromJson(json.decode(response.body));
     } catch (e) {
       print('Error: $e');
+      return null;
     }
   }
 }

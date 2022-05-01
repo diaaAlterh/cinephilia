@@ -1,7 +1,3 @@
-// ignore: file_names
-// ignore_for_file: file_names
-
-import 'package:cinephilia/model/details_model.dart';
 import 'package:cinephilia/model/tmdb_details.dart';
 import 'package:cinephilia/persistance/api_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -21,9 +17,7 @@ class TmdbDetailsBloc {
       TmdbDetails? tmdbDetails = await fetchTmdbDetails();
       _detailsBlocFetcher.sink.add(tmdbDetails!);
     } catch (e) {
-      // ignore: avoid_print
       _detailsBlocFetcher.sink.addError(e);
-      print('hhhhhhhhhhhhhhhhhh $e');
     }
   }
 

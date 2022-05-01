@@ -64,23 +64,30 @@ class _MyAppState extends State<MyApp> {
                                 );
                               }),
                           actions: [
-                            IconButton(
-                              onPressed: () {
-                                helper.goTo(
-                                    context,
-                                    SeeMore(
-                                        drawerStream == DrawerSelection.movies
-                                            ? 0
-                                            : 6,
-                                        drawerStream == DrawerSelection.movies
-                                            ? ytsSearchBloc.ytsSearch
-                                            : tmdbSearchBloc.tmdbSearch));
-                              },
-                              tooltip: 'Search',
-                              icon: Icon(
-                                Icons.search,
-                              ),
-                            )
+                            StreamBuilder(
+                                stream: drawerStream,
+                                initialData: DrawerSelection.movies,
+                                builder: (context, snapshot) {
+                                  return IconButton(
+                                    onPressed: () {
+                                      helper.goTo(
+                                          context,
+                                          SeeMore(
+                                              snapshot.data ==
+                                                      DrawerSelection.movies
+                                                  ? 0
+                                                  : 6,
+                                              snapshot.data ==
+                                                      DrawerSelection.movies
+                                                  ? ytsSearchBloc.ytsSearch
+                                                  : tmdbSearchBloc.tmdbSearch));
+                                    },
+                                    tooltip: 'Search',
+                                    icon: Icon(
+                                      Icons.search,
+                                    ),
+                                  );
+                                })
                           ],
                         ),
                         drawer: Drawer(
@@ -174,8 +181,9 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                       onTap: () {
                                         Share.share(
-                                            'https://drive.google.com/drive/folders/11IJzLJitQTYqrK-DFPzaPuWDb86OEAOJ?usp=sharing',
-                                            subject: 'Share Cinephilia');
+                                            'https://drive.google.com/drive/folders/1Auyle-yJL6VdTyeJOZbOGhXDfX4gGuDC?usp=sharing',
+                                            subject:
+                                                'Cinephilia v1.0.0\n(Movies and tv shows stream');
                                         helper.goBack(context);
                                       },
                                     ),

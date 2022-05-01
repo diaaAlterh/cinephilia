@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final yts = ytsFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 Yts ytsFromJson(String str) => Yts.fromJson(json.decode(str));
